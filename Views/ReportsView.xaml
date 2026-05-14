@@ -1,0 +1,11 @@
+<UserControl x:Class="PharmaDesk.Views.ReportsView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Border Style="{StaticResource Card}" Width="560" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <StackPanel>
+            <TextBlock Text="Rapoarte vanzari" FontSize="28" FontWeight="Bold" />
+            <TextBlock Text="De la" /><DatePicker SelectedDate="{Binding From}" />
+            <TextBlock Text="Pana la" /><DatePicker SelectedDate="{Binding To}" />
+            <StackPanel Orientation="Horizontal"><Button Content="Export Excel" Command="{Binding ExportExcelCommand}" Style="{StaticResource PrimaryButton}" /><Button Content="Export PDF" Command="{Binding ExportPdfCommand}" Style="{StaticResource GhostButton}" /></StackPanel>
+            <TextBlock Text="{Binding LastReportPath}" TextWrapping="Wrap" Foreground="{StaticResource MutedTextBrush}" Margin="4,12" />
+        </StackPanel>
+    </Border>
+</UserControl>

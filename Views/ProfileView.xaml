@@ -1,0 +1,20 @@
+<UserControl x:Class="PharmaDesk.Views.ProfileView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel MaxWidth="560">
+        <Border Style="{StaticResource Card}">
+            <StackPanel>
+                <TextBlock Text="Profil utilizator" FontSize="28" FontWeight="Bold" />
+                <TextBlock Text="Nume complet" /><TextBox Text="{Binding FullName}" />
+                <TextBlock Text="Email" /><TextBox Text="{Binding Email}" />
+                <Button Content="Salveaza profil" Command="{Binding SaveProfileCommand}" Style="{StaticResource PrimaryButton}" />
+            </StackPanel>
+        </Border>
+        <Border Style="{StaticResource Card}">
+            <StackPanel>
+                <TextBlock Text="Schimbare parola" FontSize="22" FontWeight="Bold" />
+                <TextBlock Text="Parola curenta" /><TextBox Text="{Binding OldPassword}" />
+                <TextBlock Text="Parola noua" /><TextBox Text="{Binding NewPassword}" />
+                <Button Content="Schimba parola" Command="{Binding ChangePasswordCommand}" Style="{StaticResource GhostButton}" />
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

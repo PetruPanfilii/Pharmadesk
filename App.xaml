@@ -1,0 +1,17 @@
+<Application x:Class="PharmaDesk.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:helpers="clr-namespace:PharmaDesk.Helpers">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/PharmaTheme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+            <helpers:NotNullConverter x:Key="NotNullConverter" />
+            <helpers:StockWarningConverter x:Key="StockWarningConverter" />
+            <helpers:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+            <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

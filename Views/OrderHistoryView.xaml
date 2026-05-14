@@ -1,0 +1,16 @@
+<UserControl x:Class="PharmaDesk.Views.OrderHistoryView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Border Style="{StaticResource Card}">
+        <DockPanel>
+            <TextBlock DockPanel.Dock="Top" Text="Istoric comenzi" FontSize="28" FontWeight="Bold" Margin="0,0,0,12" />
+            <DataGrid ItemsSource="{Binding Orders}" AutoGenerateColumns="False" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Numar" Binding="{Binding OrderNumber}" Width="150" />
+                    <DataGridTextColumn Header="Data" Binding="{Binding OrderDate}" Width="170" />
+                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="120" />
+                    <DataGridTextColumn Header="Total" Binding="{Binding GrandTotal}" Width="120" />
+                    <DataGridTextColumn Header="Factura PDF" Binding="{Binding InvoicePath}" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+    </Border>
+</UserControl>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 CREATE DATABASE IF NOT EXISTS PharmaDeskDB;
 USE PharmaDeskDB;
 
@@ -96,11 +97,93 @@ CREATE TABLE Orders (
 );
 
 -- 8. OrderItems
+=======
+CREATE DATABASE IF NOT EXISTS PharmaDeskDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE PharmaDeskDB;
+
+CREATE TABLE Roles (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(40) NOT NULL UNIQUE
+);
+
+CREATE TABLE Users (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Username VARCHAR(80) NOT NULL UNIQUE,
+    PasswordHash VARCHAR(255) NOT NULL,
+    Email VARCHAR(160) NOT NULL UNIQUE,
+    FullName VARCHAR(180) NOT NULL,
+    RoleId INT NOT NULL,
+    IsActive BOOLEAN NOT NULL DEFAULT TRUE,
+    CreatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT FK_Users_Roles FOREIGN KEY (RoleId) REFERENCES Roles(Id)
+);
+
+CREATE TABLE Categories (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(120) NOT NULL,
+    Description VARCHAR(500) NULL,
+    ParentCategoryId INT NULL,
+    CONSTRAINT FK_Categories_Parent FOREIGN KEY (ParentCategoryId) REFERENCES Categories(Id) ON DELETE RESTRICT
+);
+
+CREATE TABLE Medicines (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(180) NOT NULL,
+    GenericName VARCHAR(180) NULL,
+    Barcode VARCHAR(80) NOT NULL UNIQUE,
+    CategoryId INT NOT NULL,
+    DosageForm VARCHAR(80) NOT NULL,
+    Strength VARCHAR(80) NOT NULL,
+    UnitPrice DECIMAL(10,2) NOT NULL,
+    StockQuantity INT NOT NULL,
+    ReorderLevel INT NOT NULL DEFAULT 10,
+    IsPrescriptionRequired BOOLEAN NOT NULL DEFAULT FALSE,
+    IsActive BOOLEAN NOT NULL DEFAULT TRUE,
+    ImageUrl VARCHAR(500) NULL,
+    Description VARCHAR(1000) NULL,
+    Rating DECIMAL(3,2) NOT NULL DEFAULT 4.60,
+    IsNew BOOLEAN NOT NULL DEFAULT FALSE,
+    IsPromotion BOOLEAN NOT NULL DEFAULT FALSE,
+    DiscountPercent INT NOT NULL DEFAULT 0,
+    CreatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT FK_Medicines_Categories FOREIGN KEY (CategoryId) REFERENCES Categories(Id)
+);
+
+CREATE TABLE CartItems (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    UserId INT NOT NULL,
+    MedicineId INT NOT NULL,
+    Quantity INT NOT NULL,
+    AddedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY UX_CartItems_User_Medicine (UserId, MedicineId),
+    CONSTRAINT FK_CartItems_Users FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE,
+    CONSTRAINT FK_CartItems_Medicines FOREIGN KEY (MedicineId) REFERENCES Medicines(Id)
+);
+
+CREATE TABLE Orders (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    OrderNumber VARCHAR(40) NOT NULL UNIQUE,
+    UserId INT NOT NULL,
+    OrderDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    TotalAmount DECIMAL(12,2) NOT NULL,
+    Discount DECIMAL(12,2) NOT NULL,
+    Tax DECIMAL(12,2) NOT NULL,
+    GrandTotal DECIMAL(12,2) NOT NULL,
+    PaymentMethod VARCHAR(40) NOT NULL,
+    ShippingAddress VARCHAR(500) NOT NULL,
+    Status VARCHAR(40) NOT NULL,
+    PrescriptionUploadUrl VARCHAR(500) NULL,
+    InvoicePath VARCHAR(500) NULL,
+    CONSTRAINT FK_Orders_Users FOREIGN KEY (UserId) REFERENCES Users(Id)
+);
+
+>>>>>>> 09cdda9 (Conectarea bazei de date la aplicatie)
 CREATE TABLE OrderItems (
     Id INT PRIMARY KEY AUTO_INCREMENT,
     OrderId INT NOT NULL,
     MedicineId INT NOT NULL,
     Quantity INT NOT NULL,
+<<<<<<< HEAD
     UnitCost DECIMAL(10,2) NOT NULL,
     TotalCost DECIMAL(12,2),
     FOREIGN KEY (OrderId) REFERENCES Orders(Id) ON DELETE CASCADE,
@@ -233,3 +316,48 @@ INSERT INTO MedicineLots (MedicineId, LotNumber, ExpiryDate, QuantityReceived, Q
 (1, 'LOT001', DATE_ADD(CURDATE(), INTERVAL 2 YEAR), 500, 500, 3.50, 5.99, 1, CURDATE());
 
 INSERT INTO Inventory (MedicineId, CurrentStock, ReservedStock) VALUES (1, 500, 0);
+=======
+    UnitPrice DECIMAL(10,2) NOT NULL,
+    TotalPrice DECIMAL(12,2) NOT NULL,
+    CONSTRAINT FK_OrderItems_Orders FOREIGN KEY (OrderId) REFERENCES Orders(Id) ON DELETE CASCADE,
+    CONSTRAINT FK_OrderItems_Medicines FOREIGN KEY (MedicineId) REFERENCES Medicines(Id)
+);
+
+CREATE TABLE AuditLogs (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    UserId INT NULL,
+    Action VARCHAR(180) NOT NULL,
+    TableName VARCHAR(120) NOT NULL,
+    RecordId INT NULL,
+    Timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT FK_AuditLogs_Users FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE SET NULL
+);
+
+CREATE TABLE Settings (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    SettingKey VARCHAR(120) NOT NULL UNIQUE,
+    SettingValue VARCHAR(1000) NOT NULL
+);
+
+CREATE INDEX IX_Medicines_Name ON Medicines(Name);
+CREATE INDEX IX_Medicines_CategoryId ON Medicines(CategoryId);
+CREATE INDEX IX_Orders_OrderDate ON Orders(OrderDate);
+CREATE INDEX IX_AuditLogs_Timestamp ON AuditLogs(Timestamp);
+
+INSERT INTO Roles (Name) VALUES ('Admin'), ('Pharmacist'), ('User');
+
+-- Parolele reale sunt generate automat de aplicatie cu BCrypt la prima rulare:
+-- admin/Admin123!, farmacist/Farmacist123!, client/Client123!
+
+INSERT INTO Categories (Name, Description) VALUES
+('Sanatate', 'Medicamente si produse esentiale'),
+('Frumusete', 'Dermatocosmetice si ingrijire'),
+('Vitamine', 'Imunitate si suplimente'),
+('Mama si copilul', 'Produse pentru familie'),
+('Recomandate', 'Selectii facute de farmacisti');
+
+INSERT INTO Settings (SettingKey, SettingValue) VALUES
+('CompanyName', 'PharmaDesk'),
+('TaxRate', '0.09'),
+('Currency', 'RON');
+>>>>>>> 09cdda9 (Conectarea bazei de date la aplicatie)

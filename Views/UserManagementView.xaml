@@ -1,0 +1,16 @@
+<UserControl x:Class="PharmaDesk.Views.UserManagementView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Border Style="{StaticResource Card}">
+        <DockPanel><TextBlock DockPanel.Dock="Top" Text="Utilizatori" FontSize="28" FontWeight="Bold" />
+            <DataGrid ItemsSource="{Binding Users}" AutoGenerateColumns="False" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Username" Binding="{Binding Username}" Width="150" />
+                    <DataGridTextColumn Header="Nume" Binding="{Binding FullName}" Width="220" />
+                    <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*" />
+                    <DataGridTextColumn Header="Rol" Binding="{Binding Role.Name}" Width="120" />
+                    <DataGridCheckBoxColumn Header="Activ" Binding="{Binding IsActive}" Width="80" />
+                    <DataGridTemplateColumn Header="Actiuni" Width="140"><DataGridTemplateColumn.CellTemplate><DataTemplate><Button Content="Activeaza/Stop" Command="{Binding DataContext.ToggleActiveCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="{Binding}" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+    </Border>
+</UserControl>

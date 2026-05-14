@@ -1,0 +1,18 @@
+<UserControl x:Class="PharmaDesk.Views.LoginView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Border Style="{StaticResource Card}" Width="460" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="32">
+            <StackPanel>
+                <Image Source="pack://application:,,,/Resources/logo.png" Height="110" Margin="0,0,0,12" />
+                <TextBlock Text="Autentificare PharmaDesk" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" />
+                <TextBlock Text="client / Client123!, farmacist / Farmacist123!, admin / Admin123!" Foreground="{StaticResource MutedTextBrush}" TextAlignment="Center" Margin="0,4,0,20" />
+                <TextBlock Text="Utilizator sau email" />
+                <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Text="Parola" />
+                <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Text="{Binding ErrorMessage}" Foreground="{StaticResource AccentBrush}" Margin="0,0,0,8" />
+                <Button Content="Intra in aplicatie" Command="{Binding LoginCommand}" Style="{StaticResource PrimaryButton}" />
+                <Button Content="Creeaza cont client" Command="{Binding DataContext.GoRegisterCommand, RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource GhostButton}" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

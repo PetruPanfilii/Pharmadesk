@@ -1,0 +1,194 @@
+<UserControl x:Class="PharmaDesk.Views.ProductManagementView" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Background="{StaticResource DarkBgBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="420" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Products List -->
+        <Border Grid.Column="0"
+               Background="{StaticResource CardBgBrush}"
+               CornerRadius="8"
+               Padding="16"
+               Margin="0,0,12,0"
+               BorderBrush="{StaticResource BorderDarkBrush}"
+               BorderThickness="1"
+               Effect="{StaticResource SoftShadow}">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" 
+                          Text="💊 Medicamente și Stoc" 
+                          FontSize="22" 
+                          FontWeight="Bold" 
+                          Foreground="{StaticResource TextBrush}"
+                          Margin="0,0,0,16" />
+                
+                <DataGrid ItemsSource="{Binding Products}" 
+                         AutoGenerateColumns="False" 
+                         IsReadOnly="True"
+                         EnableRowVirtualization="True"
+                         EnableColumnVirtualization="True"
+                         VirtualizingPanel.IsVirtualizing="True"
+                         VirtualizingPanel.VirtualizationMode="Recycling"
+                         ScrollViewer.CanContentScroll="True"
+                         Background="{StaticResource DarkBgBrush}"
+                         Foreground="{StaticResource TextBrush}"
+                         BorderBrush="{StaticResource BorderDarkBrush}"
+                         RowHeight="45">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Nume" Binding="{Binding Name}" Width="*" />
+                        <DataGridTextColumn Header="Preț" Binding="{Binding UnitPrice, StringFormat={}{0:F2}}" Width="80" />
+                        <DataGridTextColumn Header="Stoc" Binding="{Binding StockQuantity}" Width="70" />
+                        <DataGridCheckBoxColumn Header="RX" Binding="{Binding IsPrescriptionRequired}" Width="50" />
+                        <DataGridTemplateColumn Header="Acțiuni" Width="140">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="✏️ Edit" 
+                                               Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
+                                               CommandParameter="{Binding}" 
+                                               Style="{StaticResource GhostButton}"
+                                               Padding="6,4"
+                                               FontSize="10"
+                                               Margin="2,0" />
+                                        <Button Content="🗑️ Stop" 
+                                               Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
+                                               CommandParameter="{Binding}" 
+                                               Style="{StaticResource PrimaryButton}"
+                                               Padding="6,4"
+                                               FontSize="10"
+                                               Margin="2,0" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+
+        <!-- Product Editor Form -->
+        <Border Grid.Column="1"
+               Background="{StaticResource CardBgBrush}"
+               CornerRadius="8"
+               Padding="16"
+               BorderBrush="{StaticResource BorderDarkBrush}"
+               BorderThickness="1"
+               Effect="{StaticResource SoftShadow}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Text="📝 Editor Produs" 
+                              FontSize="18" 
+                              FontWeight="Bold" 
+                              Foreground="{StaticResource TextBrush}" 
+                              Margin="0,0,0,12" />
+                    
+                    <!-- Image Preview Section -->
+                    <Border CornerRadius="6" Height="120" Background="{StaticResource DarkBgBrush}" BorderBrush="{StaticResource BorderDarkBrush}" BorderThickness="1" Margin="0,0,0,12">
+                        <Image Source="{Binding Editor.ImageUrl, FallbackValue='pack://application:,,,/Assets/Products/placeholder.png'}"
+                               Stretch="UniformToFill"
+                               RenderOptions.BitmapScalingMode="LowQuality"
+                               SnapsToDevicePixels="True" />
+                    </Border>
+                    
+                    <!-- Image Upload Button -->
+                    <Button Content="📷 Incarca imagine" 
+                           Command="{Binding UploadImageCommand}" 
+                           Style="{StaticResource GhostButton}"
+                           Padding="12,8"
+                           Margin="0,0,0,12" />
+                    
+                    <!-- Name -->
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="Nume produs" Foreground="{StaticResource MutedTextBrush}" FontSize="11" Margin="0,0,0,4" />
+                        <TextBox Text="{Binding Editor.Name, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                    
+                    <!-- Generic Name -->
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="Substanță activă" Foreground="{StaticResource MutedTextBrush}" FontSize="11" Margin="0,0,0,4" />
+                        <TextBox Text="{Binding Editor.GenericName, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                    
+                    <!-- Barcode -->
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="Cod bare" Foreground="{StaticResource MutedTextBrush}" FontSize="11" Margin="0,0,0,4" />
+                        <TextBox Text="{Binding Editor.Barcode, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                    
+                    <!-- Category -->
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="Categorie" Foreground="{StaticResource MutedTextBrush}" FontSize="11" Margin="0,0,0,4" />
+                        <ComboBox ItemsSource="{Binding Categories}" 
+                                 DisplayMemberPath="Name" 
+                                 SelectedValuePath="Id" 
+                                 SelectedValue="{Binding Editor.CategoryId}" />
+                    </StackPanel>
+                    
+                    <!-- Dosage Form -->
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="Formă" Foreground="{StaticResource MutedTextBrush}" FontSize="11" Margin="0,0,0,4" />
+                        <TextBox Text="{Binding Editor.DosageForm, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                    
+                    <!-- Strength -->
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="Concentrație" Foreground="{StaticResource MutedTextBrush}" FontSize="11" Margin="0,0,0,4" />
+                        <TextBox Text="{Binding Editor.Strength, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                    
+                    <!-- Price -->
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="Preț (RON)" Foreground="{StaticResource MutedTextBrush}" FontSize="11" Margin="0,0,0,4" />
+                        <TextBox Text="{Binding Editor.UnitPrice, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                    
+                    <!-- Stock -->
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="Stoc" Foreground="{StaticResource MutedTextBrush}" FontSize="11" Margin="0,0,0,4" />
+                        <TextBox Text="{Binding Editor.StockQuantity, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                    
+                    <!-- Reorder Level -->
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="Prag reaprovizionare" Foreground="{StaticResource MutedTextBrush}" FontSize="11" Margin="0,0,0,4" />
+                        <TextBox Text="{Binding Editor.ReorderLevel, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                    
+                    <!-- Checkboxes Row 1 -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <CheckBox Content="Necesita RX" IsChecked="{Binding Editor.IsPrescriptionRequired}" Margin="0,0,12,0" />
+                        <CheckBox Content="Promotie" IsChecked="{Binding Editor.IsPromotion}" />
+                    </StackPanel>
+                    
+                    <!-- Checkboxes Row 2 -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <CheckBox Content="Nou" IsChecked="{Binding Editor.IsNew}" Margin="0,0,12,0" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Discount %" Foreground="{StaticResource MutedTextBrush}" FontSize="11" VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <TextBox Text="{Binding Editor.DiscountPercent, UpdateSourceTrigger=PropertyChanged}" Width="50" />
+                        </StackPanel>
+                    </StackPanel>
+                    
+                    <!-- Description -->
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="Descriere" Foreground="{StaticResource MutedTextBrush}" FontSize="11" Margin="0,0,0,4" />
+                        <TextBox Text="{Binding Editor.Description, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" Height="60" TextWrapping="Wrap" />
+                    </StackPanel>
+                    
+                    <!-- Action Buttons -->
+                    <StackPanel Margin="0,12,0,0">
+                        <Button Content="💾 Salveaza" 
+                               Command="{Binding SaveCommand}" 
+                               Style="{StaticResource PrimaryButton}"
+                               Margin="0,0,0,8" />
+                        <Button Content="➕ Produs Nou" 
+                               Command="{Binding NewProductCommand}" 
+                               Style="{StaticResource GhostButton}" />
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>
