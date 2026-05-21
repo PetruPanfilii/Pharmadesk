@@ -18,9 +18,9 @@
             <StackPanel>
                 <TextBlock Text="Checkout" FontSize="24" FontWeight="Bold" />
                 <TextBlock Text="Adresa livrare" /><TextBox Text="{Binding ShippingAddress, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" Height="80" />
-                <TextBlock Text="Metoda plata" /><ComboBox SelectedValue="{Binding PaymentMethod}" SelectedValuePath="Content"><ComboBoxItem Content="Card" /><ComboBoxItem Content="Cash la livrare" /></ComboBox>
+                <TextBlock Text="Metoda plata" /><ComboBox SelectedValue="{Binding PaymentMethod, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Content"><ComboBoxItem Content="Card" /><ComboBoxItem Content="Cash la livrare" /></ComboBox>
                 <Button Content="Incarca prescriptie PDF" Command="{Binding PickPrescriptionCommand}" Style="{StaticResource GhostButton}" />
-                <TextBlock Text="{Binding PrescriptionPath}" Foreground="{StaticResource MutedTextBrush}" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding PrescriptionPath}" Foreground="{DynamicResource MutedTextBrush}" TextWrapping="Wrap" />
                 <TextBlock Text="{Binding Total, StringFormat=Total produse: {0:0.00} RON}" FontSize="22" FontWeight="Bold" Margin="0,14" />
                 <Button Content="Plateste simulat si plaseaza comanda" Command="{Binding CheckoutCommand}" Style="{StaticResource PrimaryButton}" />
             </StackPanel>

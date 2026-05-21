@@ -4,7 +4,7 @@
         xmlns:vm="clr-namespace:PharmaDesk.ViewModels"
         xmlns:views="clr-namespace:PharmaDesk.Views"
         Title="PharmaDesk" Height="820" Width="1280" MinHeight="700" MinWidth="1080"
-        WindowStartupLocation="CenterScreen" Background="{StaticResource DarkBgBrush}">
+        WindowStartupLocation="CenterScreen" Background="{DynamicResource DarkBgBrush}">
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:LoginViewModel}"><views:LoginView /></DataTemplate>
         <DataTemplate DataType="{x:Type vm:RegisterViewModel}"><views:RegisterView /></DataTemplate>
@@ -40,7 +40,7 @@
         </Grid.ColumnDefinitions>
         
         <!-- Sidebar (Dark theme) -->
-        <Border Background="{StaticResource CardBgBrush}" BorderBrush="{StaticResource BorderDarkBrush}" BorderThickness="0,0,1,0" Padding="12">
+        <Border Background="{DynamicResource CardBgBrush}" BorderBrush="{DynamicResource BorderDarkBrush}" BorderThickness="0,0,1,0" Padding="12">
             <DockPanel LastChildFill="True">
                 <!-- Header with Toggle Button -->
                 <Grid DockPanel.Dock="Top" Margin="0,0,0,20" Height="60">
@@ -54,8 +54,8 @@
                                Visibility="{Binding IsSidebarExpanded, Converter={StaticResource BoolToVisibilityConverter}}">
                         <Image Source="pack://application:,,,/Resources/logo.png" Width="40" Height="40" Stretch="Uniform" />
                         <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="PharmaDesk" Foreground="{StaticResource TextBrush}" FontSize="14" FontWeight="Bold" />
-                            <TextBlock Text="farmacie" Foreground="{StaticResource MutedTextBrush}" FontSize="9" />
+                            <TextBlock Text="PharmaDesk" Foreground="{DynamicResource TextBrush}" FontSize="14" FontWeight="Bold" />
+                            <TextBlock Text="farmacie" Foreground="{DynamicResource MutedTextBrush}" FontSize="9" />
                         </StackPanel>
                     </StackPanel>
                     
@@ -64,7 +64,7 @@
                            Style="{StaticResource GhostButton}" 
                            Padding="6" Margin="4" ToolTip="Toggle Sidebar"
                            Background="Transparent" BorderThickness="0">
-                        <TextBlock Text="☰" FontSize="16" Foreground="{StaticResource AccentBrush}" />
+                        <TextBlock Text="☰" FontSize="16" Foreground="{DynamicResource AccentBrush}" />
                     </Button>
                 </Grid>
 
@@ -73,7 +73,7 @@
                     <StackPanel>
                         <!-- User Info -->
                         <TextBlock Text="{Binding CurrentUserName}" 
-                                  Foreground="{StaticResource TextBrush}" 
+                                  Foreground="{DynamicResource TextBrush}" 
                                   FontWeight="SemiBold" 
                                   Margin="8,0,0,12"
                                   TextTrimming="CharacterEllipsis"
@@ -99,11 +99,11 @@
                                     </Style>
                                 </StackPanel.Style>
                                 
-                                <Border Margin="0,12,0,0" Height="1" Background="{StaticResource BorderDarkBrush}" 
+                                <Border Margin="0,12,0,0" Height="1" Background="{DynamicResource BorderDarkBrush}" 
                                        Visibility="{Binding IsSidebarExpanded, Converter={StaticResource BoolToVisibilityConverter}}" />
                                 
                                 <TextBlock Text="FARMACIE" 
-                                          Foreground="{StaticResource AccentBrush}" 
+                                          Foreground="{DynamicResource AccentBrush}" 
                                           FontWeight="Bold" 
                                           Margin="8,12,0,8"
                                           Visibility="{Binding IsSidebarExpanded, Converter={StaticResource BoolToVisibilityConverter}}" />
@@ -127,11 +127,11 @@
                                     </Style>
                                 </StackPanel.Style>
                                 
-                                <Border Margin="0,12,0,0" Height="1" Background="{StaticResource BorderDarkBrush}" 
+                                <Border Margin="0,12,0,0" Height="1" Background="{DynamicResource BorderDarkBrush}" 
                                        Visibility="{Binding IsSidebarExpanded, Converter={StaticResource BoolToVisibilityConverter}}" />
                                 
                                 <TextBlock Text="ADMIN" 
-                                          Foreground="{StaticResource AccentBrush}" 
+                                          Foreground="{DynamicResource AccentBrush}" 
                                           FontWeight="Bold" 
                                           Margin="8,12,0,8"
                                           Visibility="{Binding IsSidebarExpanded, Converter={StaticResource BoolToVisibilityConverter}}" />
@@ -156,14 +156,14 @@
         </Border>
 
         <!-- Main Content Area -->
-        <Grid Grid.Column="1" Background="{StaticResource DarkBgBrush}">
+        <Grid Grid.Column="1" Background="{DynamicResource DarkBgBrush}">
             <ContentControl Content="{Binding CurrentViewModel}" Margin="22" />
             
             <!-- Toast Notification -->
-            <Border Background="{StaticResource CardBgBrush}" 
+            <Border Background="{DynamicResource CardBgBrush}" 
                    CornerRadius="8" 
                    Padding="16" 
-                   BorderBrush="{StaticResource AccentBrush}"
+                   BorderBrush="{DynamicResource AccentBrush}"
                    BorderThickness="1"
                    HorizontalAlignment="Right" 
                    VerticalAlignment="Bottom" 
@@ -171,7 +171,7 @@
                    Effect="{StaticResource HighShadow}"
                    Visibility="{Binding IsToastVisible, Converter={StaticResource BoolToVisibility}}">
                 <TextBlock Text="{Binding ToastMessage}" 
-                          Foreground="{StaticResource TextBrush}" 
+                          Foreground="{DynamicResource TextBrush}" 
                           FontWeight="SemiBold" />
             </Border>
         </Grid>

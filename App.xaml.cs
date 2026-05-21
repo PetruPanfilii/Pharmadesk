@@ -24,18 +24,39 @@ public partial class App : Application
                 .ConfigureAppConfiguration(config => config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true))
                 .ConfigureServices((context, services) =>
                 {
-                    var connection = context.Configuration.GetConnectionString("DefaultConnection")!;
-                    var serverVersion = MySqlServerVersion.Parse(context.Configuration["App:MySqlServerVersion"] ?? "8.0.36");
-                    services.AddDbContext<PharmaDeskDbContext>(options => options.UseMySql(connection, serverVersion));
                     services.AddSingleton<AppSession>();
-                    services.AddTransient<DatabaseInitializer>();
-                    services.AddTransient<IAuthService, AuthService>();
-                    services.AddTransient<ICatalogService, CatalogService>();
-                    services.AddTransient<ICartService, CartService>();
-                    services.AddTransient<IOrderService, OrderService>();
-                    services.AddTransient<IReportService, ReportService>();
-                    services.AddTransient<IAuditService, AuditService>();
+                    services.AddSingleton<IThemeService, ThemeService>();
                     services.AddSingleton<IToastService, ToastService>();
+
+                    var useMockData = context.Configuration.GetValue("App:UseMockData", true);
+                    if (useMockData)
+                    {
+                        services.AddSingleton<MockDataStore>();
+                        services.AddTransient<IAuthService, MockAuthService>();
+                        services.AddTransient<ICatalogService, MockCatalogService>();
+                        services.AddTransient<ICartService, MockCartService>();
+                        services.AddTransient<IOrderService, MockOrderService>();
+                        services.AddTransient<IReportService, MockReportService>();
+                        services.AddTransient<IAuditService, MockAuditService>();
+                        services.AddTransient<IAdminDashboardService, MockAdminDashboardService>();
+                        services.AddTransient<IUserService, MockUserService>();
+                    }
+                    else
+                    {
+                        var connection = context.Configuration.GetConnectionString("DefaultConnection")!;
+                        var serverVersion = MySqlServerVersion.Parse(context.Configuration["App:MySqlServerVersion"] ?? "8.0.36");
+                        services.AddDbContext<PharmaDeskDbContext>(options => options.UseMySql(connection, serverVersion));
+                        services.AddTransient<DatabaseInitializer>();
+                        services.AddTransient<IAuthService, AuthService>();
+                        services.AddTransient<ICatalogService, CatalogService>();
+                        services.AddTransient<ICartService, CartService>();
+                        services.AddTransient<IOrderService, OrderService>();
+                        services.AddTransient<IReportService, ReportService>();
+                        services.AddTransient<IAuditService, AuditService>();
+                        services.AddTransient<IAdminDashboardService, AdminDashboardService>();
+                        services.AddTransient<IUserService, UserService>();
+                    }
+
                     services.AddSingleton<MainViewModel>();
                     services.AddTransient<LoginViewModel>();
                     services.AddTransient<RegisterViewModel>();
@@ -55,7 +76,13 @@ public partial class App : Application
                 .Build();
 
             await host.StartAsync();
-            await host.Services.GetRequiredService<DatabaseInitializer>().InitializeAsync();
+            var useMockData = host.Services.GetRequiredService<IConfiguration>().GetValue("App:UseMockData", true);
+            host.Services.GetRequiredService<IThemeService>().LoadSavedTheme();
+            if (!useMockData)
+            {
+                await host.Services.GetRequiredService<DatabaseInitializer>().InitializeAsync();
+            }
+
             var mainViewModel = host.Services.GetRequiredService<MainViewModel>();
             mainViewModel.Initialize();
             var window = host.Services.GetRequiredService<MainWindow>();

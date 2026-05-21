@@ -1,10 +1,8 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
-using PharmaDesk.Data;
 using PharmaDesk.Models;
 using PharmaDesk.Services;
 
@@ -22,7 +20,7 @@ public class ProductSection(string name, IEnumerable<Medicine> products)
     public ObservableCollection<Medicine> Products { get; } = new(products);
 }
 
-public partial class MainViewModel(IServiceProvider provider, AppSession session, IToastService toast) : ViewModelBase
+public partial class MainViewModel(IServiceProvider provider, AppSession session, IToastService toast, IThemeService theme) : ViewModelBase
 {
     [ObservableProperty] private ViewModelBase? currentViewModel;
     [ObservableProperty] private string toastMessage = string.Empty;
@@ -38,6 +36,7 @@ public partial class MainViewModel(IServiceProvider provider, AppSession session
     public void Initialize()
     {
         Title = "PharmaDesk";
+        IsDarkTheme = theme.IsDark;
         toast.ToastRaised += ShowToast;
         CurrentViewModel = provider.GetRequiredService<LoginViewModel>();
     }
@@ -55,7 +54,7 @@ public partial class MainViewModel(IServiceProvider provider, AppSession session
     [RelayCommand] private async Task GoAdminOrders() { var vm = provider.GetRequiredService<AdminOrdersViewModel>(); await vm.LoadAsync(); CurrentViewModel = vm; RefreshChrome(); }
     [RelayCommand] private async Task GoReports() { var vm = provider.GetRequiredService<ReportsViewModel>(); await vm.LoadAsync(); CurrentViewModel = vm; RefreshChrome(); }
     [RelayCommand] private async Task GoAudit() { var vm = provider.GetRequiredService<AuditLogViewModel>(); await vm.LoadAsync(); CurrentViewModel = vm; RefreshChrome(); }
-    [RelayCommand] private void ToggleTheme() => IsDarkTheme = !IsDarkTheme;
+    [RelayCommand] private void ToggleTheme() { theme.ToggleTheme(); IsDarkTheme = theme.IsDark; }
     [RelayCommand] private void ToggleSidebar() => IsSidebarExpanded = !IsSidebarExpanded;
 
     [RelayCommand]
@@ -225,9 +224,16 @@ public partial class CartViewModel(ICartService cart, IOrderService orders, AppS
     private async Task CheckoutAsync()
     {
         if (session.CurrentUser is null) return;
-        var order = await orders.CheckoutAsync(session.CurrentUser.Id, ShippingAddress, PaymentMethod, PrescriptionPath);
-        await LoadAsync();
-        toast.Show($"Comanda {order.OrderNumber} a fost plasata cu succes.");
+        try
+        {
+            var order = await orders.CheckoutAsync(session.CurrentUser.Id, ShippingAddress, PaymentMethod, PrescriptionPath);
+            await LoadAsync();
+            toast.Show($"Comanda {order.OrderNumber} a fost plasata cu succes.");
+        }
+        catch (Exception ex)
+        {
+            toast.Show(ex.Message);
+        }
     }
 }
 
@@ -243,7 +249,7 @@ public partial class OrderHistoryViewModel(IOrderService orders, AppSession sess
     }
 }
 
-public partial class ProfileViewModel(AppSession session, PharmaDeskDbContext db, IAuthService auth, IToastService toast) : ViewModelBase
+public partial class ProfileViewModel(AppSession session, IUserService users, IAuthService auth, IToastService toast) : ViewModelBase
 {
     [ObservableProperty] private string fullName = string.Empty;
     [ObservableProperty] private string email = string.Empty;
@@ -262,10 +268,7 @@ public partial class ProfileViewModel(AppSession session, PharmaDeskDbContext db
     private async Task SaveProfileAsync()
     {
         if (session.CurrentUser is null) return;
-        var user = await db.Users.FirstAsync(x => x.Id == session.CurrentUser.Id);
-        user.FullName = FullName;
-        user.Email = Email;
-        await db.SaveChangesAsync();
+        await users.UpdateProfileAsync(session.CurrentUser.Id, FullName, Email);
         session.CurrentUser.FullName = FullName;
         session.CurrentUser.Email = Email;
         toast.Show("Profil actualizat.");
@@ -281,7 +284,7 @@ public partial class ProfileViewModel(AppSession session, PharmaDeskDbContext db
     }
 }
 
-public partial class AdminDashboardViewModel(PharmaDeskDbContext db, ICatalogService catalog) : ViewModelBase
+public partial class AdminDashboardViewModel(IAdminDashboardService dashboard, ICatalogService catalog, IOrderService orders, IToastService toast) : ViewModelBase
 {
     [ObservableProperty] private int clientsCount;
     [ObservableProperty] private int pharmacistsCount;
@@ -289,18 +292,53 @@ public partial class AdminDashboardViewModel(PharmaDeskDbContext db, ICatalogSer
     [ObservableProperty] private int productsCount;
     [ObservableProperty] private int lowStockCount;
     public ObservableCollection<Medicine> LowStock { get; } = new();
+    public ObservableCollection<Order> RecentOrders { get; } = new();
 
     public async Task LoadAsync()
     {
         Title = "Dashboard farmacie";
-        ClientsCount = await db.Users.CountAsync(x => x.Role!.Name == "User");
-        PharmacistsCount = await db.Users.CountAsync(x => x.Role!.Name == "Pharmacist");
-        OrdersCount = await db.Orders.CountAsync();
-        ProductsCount = await db.Medicines.CountAsync(x => x.IsActive);
+        IsBusy = true;
+        var metrics = await dashboard.GetMetricsAsync();
+        ClientsCount = metrics.ClientsCount;
+        PharmacistsCount = metrics.PharmacistsCount;
+        OrdersCount = metrics.OrdersCount;
+        ProductsCount = metrics.ProductsCount;
+        LowStockCount = metrics.LowStockCount;
+
         var low = await catalog.GetLowStockAsync();
-        LowStockCount = low.Count;
         LowStock.Clear();
         foreach (var item in low) LowStock.Add(item);
+
+        RecentOrders.Clear();
+        foreach (var order in (await orders.GetAllOrdersAsync()).Take(8))
+        {
+            RecentOrders.Add(order);
+        }
+        IsBusy = false;
+    }
+
+    [RelayCommand]
+    private async Task RefreshAsync()
+    {
+        await LoadAsync();
+        toast.Show("Dashboard actualizat.");
+    }
+
+    [RelayCommand]
+    private async Task ShipAsync(Order order)
+    {
+        await orders.MarkShippedAsync(order.Id);
+        toast.Show($"Comanda {order.OrderNumber} a fost marcata ca expediata.");
+        await LoadAsync();
+    }
+
+    [RelayCommand]
+    private async Task RestockAsync(Medicine medicine)
+    {
+        medicine.StockQuantity = Math.Max(medicine.StockQuantity, medicine.ReorderLevel) + 20;
+        await catalog.SaveMedicineAsync(medicine);
+        toast.Show($"{medicine.Name} a fost reaprovizionat.");
+        await LoadAsync();
     }
 }
 
@@ -356,11 +394,11 @@ public partial class CategoryManagementViewModel(ICatalogService catalog) : View
     [RelayCommand] private async Task SaveAsync() { await catalog.SaveCategoryAsync(Editor); await LoadAsync(); }
 }
 
-public partial class UserManagementViewModel(PharmaDeskDbContext db, IToastService toast) : ViewModelBase
+public partial class UserManagementViewModel(IUserService users, IToastService toast) : ViewModelBase
 {
     public ObservableCollection<User> Users { get; } = new();
-    public async Task LoadAsync() { Title = "Utilizatori"; Users.Clear(); foreach (var u in await db.Users.Include(x => x.Role).AsNoTracking().OrderBy(x => x.Username).ToListAsync()) Users.Add(u); }
-    [RelayCommand] private async Task ToggleActiveAsync(User user) { var entity = await db.Users.FirstAsync(x => x.Id == user.Id); entity.IsActive = !entity.IsActive; await db.SaveChangesAsync(); toast.Show(entity.IsActive ? "Utilizator activat." : "Utilizator dezactivat."); await LoadAsync(); }
+    public async Task LoadAsync() { Title = "Utilizatori"; Users.Clear(); foreach (var u in await users.GetUsersAsync()) Users.Add(u); }
+    [RelayCommand] private async Task ToggleActiveAsync(User user) { await users.ToggleActiveAsync(user.Id); toast.Show(user.IsActive ? "Utilizator dezactivat." : "Utilizator activat."); await LoadAsync(); }
 }
 
 public partial class AdminOrdersViewModel(IOrderService orders, IToastService toast) : ViewModelBase

@@ -1,0 +1,35 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Color x:Key="WindowBg">#FFF6F7F9</Color>
+    <Color x:Key="SurfaceBg">#FFFFFFFF</Color>
+    <Color x:Key="SurfaceRaisedBg">#FFFFFFFF</Color>
+    <Color x:Key="InputBg">#FFFFFFFF</Color>
+    <Color x:Key="TextPrimary">#FF111827</Color>
+    <Color x:Key="TextSecondary">#FF5B6573</Color>
+    <Color x:Key="BorderColor">#FFD8DDE6</Color>
+    <Color x:Key="HoverBg">#FFFFEEF2</Color>
+    <Color x:Key="SelectedBg">#FFFFD9E3</Color>
+    <Color x:Key="AccentRed">#FFE11D48</Color>
+    <Color x:Key="AccentRedHover">#FFBE123C</Color>
+    <Color x:Key="DangerColor">#FFDC2626</Color>
+    <Color x:Key="SuccessColor">#FF16A34A</Color>
+
+    <SolidColorBrush x:Key="DarkBgBrush" Color="{StaticResource WindowBg}" />
+    <SolidColorBrush x:Key="WindowBgBrush" Color="{StaticResource WindowBg}" />
+    <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource SurfaceBg}" />
+    <SolidColorBrush x:Key="SoftSurfaceBrush" Color="{StaticResource SurfaceRaisedBg}" />
+    <SolidColorBrush x:Key="CardBgBrush" Color="{StaticResource SurfaceRaisedBg}" />
+    <SolidColorBrush x:Key="InputBrush" Color="{StaticResource InputBg}" />
+    <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextPrimary}" />
+    <SolidColorBrush x:Key="MutedTextBrush" Color="{StaticResource TextSecondary}" />
+    <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}" />
+    <SolidColorBrush x:Key="BorderDarkBrush" Color="{StaticResource BorderColor}" />
+    <SolidColorBrush x:Key="HoverBrush" Color="{StaticResource HoverBg}" />
+    <SolidColorBrush x:Key="SelectedBrush" Color="{StaticResource SelectedBg}" />
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource AccentRed}" />
+    <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentRed}" />
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="{StaticResource AccentRedHover}" />
+    <SolidColorBrush x:Key="AccentRedLightBrush" Color="#33E11D48" />
+    <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource DangerColor}" />
+    <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}" />
+</ResourceDictionary>

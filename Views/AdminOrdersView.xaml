@@ -9,21 +9,21 @@
         </Style>
     </UserControl.Resources>
     
-    <Grid Background="{StaticResource DarkBgBrush}">
+    <Grid Background="{DynamicResource DarkBgBrush}">
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="0">
                 <!-- Title -->
                 <TextBlock Text="📨 Comenzi Primite" 
                           FontSize="28" 
                           FontWeight="Bold" 
-                          Foreground="{StaticResource TextBrush}"
+                          Foreground="{DynamicResource TextBrush}"
                           Margin="0,0,0,20" />
                 
                 <!-- Orders Data Grid -->
-                <Border Background="{StaticResource CardBgBrush}"
+                <Border Background="{DynamicResource CardBgBrush}"
                        CornerRadius="8"
                        Padding="16"
-                       BorderBrush="{StaticResource BorderDarkBrush}"
+                       BorderBrush="{DynamicResource BorderDarkBrush}"
                        BorderThickness="1"
                        Effect="{StaticResource SoftShadow}">
                     <DataGrid ItemsSource="{Binding Orders}" 
@@ -34,16 +34,16 @@
                              VirtualizingPanel.IsVirtualizing="True"
                              VirtualizingPanel.VirtualizationMode="Recycling"
                              ScrollViewer.CanContentScroll="True"
-                             Background="{StaticResource DarkBgBrush}"
-                             Foreground="{StaticResource TextBrush}"
-                             BorderBrush="{StaticResource BorderDarkBrush}"
+                             Background="{DynamicResource DarkBgBrush}"
+                             Foreground="{DynamicResource TextBrush}"
+                             BorderBrush="{DynamicResource BorderDarkBrush}"
                              RowHeight="50"
                              HeadersVisibility="Column">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="📦 Numar Comanda" 
                                               Binding="{Binding OrderNumber}" 
                                               Width="140"
-                                              Foreground="{StaticResource AccentBrush}" />
+                                              Foreground="{DynamicResource AccentBrush}" />
                             
                             <DataGridTextColumn Header="👤 Client" 
                                               Binding="{Binding User.FullName}" 
@@ -56,7 +56,7 @@
                             <DataGridTextColumn Header="💰 Total" 
                                               Binding="{Binding GrandTotal, StringFormat={}{0:F2} RON}" 
                                               Width="120"
-                                              Foreground="{StaticResource AccentBrush}" />
+                                              Foreground="{DynamicResource AccentBrush}" />
                             
                             <DataGridTemplateColumn Header="⚙️ Status" Width="140">
                                 <DataGridTemplateColumn.CellTemplate>

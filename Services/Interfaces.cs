@@ -38,6 +38,24 @@ public interface IReportService
     Task<string> ExportSalesExcelAsync(DateTime from, DateTime to);
     Task<string> ExportSalesPdfAsync(DateTime from, DateTime to);
 }
+public class AdminMetrics
+{
+    public int ClientsCount { get; set; }
+    public int PharmacistsCount { get; set; }
+    public int OrdersCount { get; set; }
+    public int ProductsCount { get; set; }
+    public int LowStockCount { get; set; }
+}
+public interface IAdminDashboardService
+{
+    Task<AdminMetrics> GetMetricsAsync();
+}
+public interface IUserService
+{
+    Task<List<User>> GetUsersAsync();
+    Task ToggleActiveAsync(int userId);
+    Task UpdateProfileAsync(int userId, string fullName, string email);
+}
 public interface IAuditService
 {
     Task LogAsync(int? userId, string action, string tableName, int? recordId = null);
@@ -47,4 +65,10 @@ public interface IToastService
 {
     event Action<string>? ToastRaised;
     void Show(string message);
+}
+public interface IThemeService
+{
+    bool IsDark { get; }
+    void LoadSavedTheme();
+    void ToggleTheme();
 }

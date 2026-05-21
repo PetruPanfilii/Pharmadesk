@@ -7,7 +7,7 @@
                 <TextBlock Text="Username" /><TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Text="Email" /><TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Text="Parola" /><TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBlock Text="{Binding Message}" Foreground="{StaticResource AccentBrush}" />
+                <TextBlock Text="{Binding Message}" Foreground="{DynamicResource AccentBrush}" />
                 <Button Content="Creeaza cont" Command="{Binding RegisterCommand}" Style="{StaticResource PrimaryButton}" />
                 <Button Content="Inapoi la login" Command="{Binding DataContext.GoLoginCommand, RelativeSource={RelativeSource AncestorType=Window}}" Style="{StaticResource GhostButton}" />
             </StackPanel>

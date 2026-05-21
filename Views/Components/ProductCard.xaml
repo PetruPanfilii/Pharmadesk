@@ -58,7 +58,7 @@
                 <TextBlock Text="{Binding Name}" 
                            FontSize="13" 
                            FontWeight="SemiBold" 
-                           Foreground="#FFFFFFFF"
+                           Foreground="{DynamicResource TextBrush}"
                            TextTrimming="CharacterEllipsis"
                            MaxHeight="36"
                            TextWrapping="Wrap" />
@@ -66,7 +66,7 @@
                 <!-- Generic Name (if exists) -->
                 <TextBlock Text="{Binding GenericName}" 
                            FontSize="11" 
-                           Foreground="#FFB3B3B3"
+                           Foreground="{DynamicResource MutedTextBrush}"
                            TextTrimming="CharacterEllipsis" 
                            Margin="0,6,0,0"
                            Visibility="{Binding GenericName, Converter={StaticResource NotNullConverter}}" />
@@ -74,7 +74,7 @@
                 <!-- Strength & Dosage -->
                 <TextBlock Text="{Binding Strength}" 
                            FontSize="11" 
-                           Foreground="#FFB3B3B3" />
+                           Foreground="{DynamicResource MutedTextBrush}" />
                 
                 <!-- Stock Status -->
                 <TextBlock Text="Stock scazut!" 
@@ -97,13 +97,13 @@
                     <TextBlock Text="{Binding UnitPrice, StringFormat='${0:F2}'}" 
                                FontSize="14" 
                                FontWeight="Bold" 
-                               Foreground="#FFE11D48" />
+                               Foreground="{DynamicResource AccentBrush}" />
                     
                     <!-- Discount Price (if promo) -->
                     <StackPanel Orientation="Horizontal" Visibility="{Binding IsPromotion, Converter={StaticResource BoolToVisibilityConverter}}">
                         <TextBlock Text="{Binding OriginalPrice, StringFormat={}${0:F2}}" 
                                    FontSize="11" 
-                                   Foreground="#FFB3B3B3"
+                                   Foreground="{DynamicResource MutedTextBrush}"
                                    TextDecorations="Strikethrough" />
                         <TextBlock Text="You save!" 
                                    FontSize="10" 
@@ -117,7 +117,7 @@
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="★" Foreground="#FFE11D48" FontSize="12"/>
                     <TextBlock Text="{Binding Rating, StringFormat={}{0:F1}}" 
-                               Foreground="#FFFFFFFF" 
+                               Foreground="{DynamicResource TextBrush}" 
                                FontSize="11" 
                                VerticalAlignment="Center"
                                Margin="2,0,0,0"/>

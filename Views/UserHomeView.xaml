@@ -4,116 +4,135 @@
              xmlns:components="clr-namespace:PharmaDesk.Views.Components">
     <UserControl.Resources>
         <Style x:Key="SectionTitle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
             <Setter Property="FontSize" Value="22" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Margin" Value="0,28,0,12" />
         </Style>
         <Style x:Key="FilterBar" TargetType="Border">
-            <Setter Property="Background" Value="{StaticResource CardBgBrush}" />
+            <Setter Property="Background" Value="{DynamicResource CardBgBrush}" />
             <Setter Property="CornerRadius" Value="8" />
             <Setter Property="Padding" Value="16" />
-            <Setter Property="BorderBrush" Value="{StaticResource BorderDarkBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderDarkBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Margin" Value="0,0,0,20" />
         </Style>
     </UserControl.Resources>
 
-    <Grid Background="{StaticResource DarkBgBrush}">
+    <Grid Background="{DynamicResource DarkBgBrush}">
         <ScrollViewer VerticalScrollBarVisibility="Auto" PanningMode="VerticalOnly">
             <StackPanel>
-                <!-- Hero Banner Section -->
-                <Grid Height="380" Margin="0,0,0,20">
-                    <Grid.Background>
-                        <ImageBrush ImageSource="pack://application:,,,/Assets/Products/hero-premium.png" Stretch="UniformToFill" />
-                    </Grid.Background>
-                    
-                    <!-- Gradient Overlay -->
-                    <Rectangle>
-                        <Rectangle.Fill>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                <GradientStop Color="#FF0F0F0F" Offset="0" />
-                                <GradientStop Color="#CC0F0F0F" Offset="0.4" />
-                                <GradientStop Color="#550F0F0F" Offset="1" />
-                            </LinearGradientBrush>
-                        </Rectangle.Fill>
-                    </Rectangle>
-                    
-                    <!-- Hero Content -->
-                    <StackPanel VerticalAlignment="Center" Margin="40,0,500,0">
-                        <TextBlock Text="FARMACIA PREMIUM" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" FontSize="14" />
-                        <TextBlock Text="{Binding HeroProduct.Name, FallbackValue='Bine ai venit'}" 
-                                  Foreground="{StaticResource TextBrush}" 
-                                  FontSize="44" 
-                                  FontWeight="Black" 
-                                  TextWrapping="Wrap" 
-                                  MaxWidth="400" />
-                        <TextBlock Text="{Binding HeroProduct.Description, FallbackValue='Descoperă selecția noastră premium de medicamente și suplimente.'}" 
-                                  Foreground="{StaticResource MutedTextBrush}" 
-                                  FontSize="16" 
-                                  TextWrapping="Wrap" 
-                                  Margin="0,12,0,18"
-                                  MaxWidth="400" />
-                        <StackPanel Orientation="Horizontal">
-                            <Button Content="➕ Adauga in cos" 
-                                   Command="{Binding AddToCartCommand}" 
-                                   CommandParameter="{Binding HeroProduct}" 
-                                   Style="{StaticResource PrimaryButton}"
-                                   Margin="0,0,8,0" />
-                            <Button Content="🛒 Vezi cosul" 
-                                   Command="{Binding DataContext.GoCartCommand, RelativeSource={RelativeSource AncestorType=Window}}" 
-                                   Style="{StaticResource GhostButton}" />
-                        </StackPanel>
-                    </StackPanel>
-                    
-                    <!-- Cart Badge -->
-                    <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,24,32,0" 
-                           Background="{StaticResource AccentBrush}" 
-                           CornerRadius="8" 
-                           Padding="16,12"
-                           Effect="{StaticResource HighShadow}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Cos:" Foreground="{StaticResource TextBrush}" FontWeight="Bold" />
-                            <TextBlock Text="{Binding CartCount}" 
-                                      Foreground="{StaticResource TextBrush}" 
-                                      FontSize="20" 
-                                      FontWeight="Black"
-                                      Margin="8,0,0,0" />
-                        </StackPanel>
-                    </Border>
-                </Grid>
+                <Border Height="300"
+                        Margin="0,0,0,20"
+                        Background="{DynamicResource CardBgBrush}"
+                        BorderBrush="{DynamicResource BorderDarkBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        ClipToBounds="True">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.15*" />
+                            <ColumnDefinition Width="0.85*" />
+                        </Grid.ColumnDefinitions>
 
-                <!-- Search & Filter Bar -->
+                        <Rectangle Grid.ColumnSpan="2">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                    <GradientStop Color="#FF0F0F0F" Offset="0" />
+                                    <GradientStop Color="#EF0F0F0F" Offset="0.48" />
+                                    <GradientStop Color="#AA10251F" Offset="1" />
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="40,0,24,0">
+                            <TextBlock Text="FARMACIA PREMIUM" Foreground="{DynamicResource AccentBrush}" FontWeight="Bold" FontSize="14" />
+                            <TextBlock Text="{Binding HeroProduct.Name, FallbackValue='Bine ai venit'}"
+                                       Foreground="{DynamicResource TextBrush}"
+                                       FontSize="36"
+                                       FontWeight="Black"
+                                       TextWrapping="Wrap"
+                                       MaxWidth="460" />
+                            <TextBlock Text="{Binding HeroProduct.Description, FallbackValue='Descopera selectia noastra premium de medicamente si suplimente.'}"
+                                       Foreground="{DynamicResource MutedTextBrush}"
+                                       FontSize="16"
+                                       TextWrapping="Wrap"
+                                       Margin="0,12,0,18"
+                                       MaxWidth="460" />
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="+ Adauga in cos"
+                                        Command="{Binding AddToCartCommand}"
+                                        CommandParameter="{Binding HeroProduct}"
+                                        Style="{StaticResource PrimaryButton}"
+                                        Margin="0,0,8,0" />
+                                <Button Content="Vezi cosul"
+                                        Command="{Binding DataContext.GoCartCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        Style="{StaticResource GhostButton}" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Grid Grid.Column="1" ClipToBounds="True" Margin="0,12,20,0">
+                            <Image Source="pack://application:,,,/Assets/Products/hero-premium.png"
+                                   Stretch="Uniform"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Bottom"
+                                   MaxHeight="270"
+                                   Opacity="0.95" />
+                        </Grid>
+
+                        <Border Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                Margin="0,24,32,0"
+                                Background="{DynamicResource AccentBrush}"
+                                CornerRadius="8"
+                                Padding="16,12"
+                                Effect="{StaticResource HighShadow}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Cos:" Foreground="White" FontWeight="Bold" />
+                                <TextBlock Text="{Binding CartCount}"
+                                           Foreground="White"
+                                           FontSize="20"
+                                           FontWeight="Black"
+                                           Margin="8,0,0,0" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Border>
+
                 <Border Style="{StaticResource FilterBar}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="220" />
                             <ColumnDefinition Width="100" />
                         </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0" 
-                                Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
-                                Padding="14,10" />
-                        <ComboBox Grid.Column="1" 
-                                 ItemsSource="{Binding Categories}" 
-                                 DisplayMemberPath="Name" 
-                                 SelectedItem="{Binding SelectedCategory}"
-                                 Foreground="{StaticResource TextBrush}"
-                                 Background="{StaticResource DarkBgBrush}"
-                                 Padding="10,8" 
-                                 Margin="10,0,0,0" />
-                        <Button Grid.Column="2" 
-                               Content="Cauta" 
-                               Command="{Binding SearchCommand}" 
-                               Style="{StaticResource PrimaryButton}"
-                               Margin="10,0,0,0" />
+                        <TextBox Grid.Column="0"
+                                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                 Padding="14,10" />
+                        <ComboBox Grid.Column="1"
+                                  ItemsSource="{Binding Categories}"
+                                  SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
+                                  TextSearch.TextPath="Name"
+                                  Padding="10,8"
+                                  Margin="10,0,0,0">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextBrush}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <Button Grid.Column="2"
+                                Content="Cauta"
+                                Command="{Binding SearchCommand}"
+                                Style="{StaticResource PrimaryButton}"
+                                Margin="10,0,0,0" />
                     </Grid>
                 </Border>
 
-                <!-- Main Products Grid (4 columns) -->
                 <StackPanel Margin="0">
                     <TextBlock Text="Toate produsele" Style="{StaticResource SectionTitle}" />
-                    
+
                     <ItemsControl ItemsSource="{Binding Products}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -122,21 +141,27 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Grid Width="280" Margin="0">
+                                <Button Width="280"
+                                        Padding="0"
+                                        Margin="0"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Cursor="Hand"
+                                        Command="{Binding DataContext.AddToCartCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}">
                                     <components:ProductCard DataContext="{Binding}" />
-                                </Grid>
+                                </Button>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </StackPanel>
 
-                <!-- Sections (Featured, Top Rated, etc) -->
                 <ItemsControl ItemsSource="{Binding Sections}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Margin="0">
                                 <TextBlock Text="{Binding Name}" Style="{StaticResource SectionTitle}" />
-                                
+
                                 <ItemsControl ItemsSource="{Binding Products}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -145,9 +170,16 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Grid Width="280" Margin="0">
+                                            <Button Width="280"
+                                                    Padding="0"
+                                                    Margin="0"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Cursor="Hand"
+                                                    Command="{Binding DataContext.AddToCartCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}">
                                                 <components:ProductCard DataContext="{Binding}" />
-                                            </Grid>
+                                            </Button>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
@@ -156,7 +188,6 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <!-- Footer Spacing -->
                 <Border Height="40" />
             </StackPanel>
         </ScrollViewer>

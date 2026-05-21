@@ -5,7 +5,7 @@
             <TextBlock Text="De la" /><DatePicker SelectedDate="{Binding From}" />
             <TextBlock Text="Pana la" /><DatePicker SelectedDate="{Binding To}" />
             <StackPanel Orientation="Horizontal"><Button Content="Export Excel" Command="{Binding ExportExcelCommand}" Style="{StaticResource PrimaryButton}" /><Button Content="Export PDF" Command="{Binding ExportPdfCommand}" Style="{StaticResource GhostButton}" /></StackPanel>
-            <TextBlock Text="{Binding LastReportPath}" TextWrapping="Wrap" Foreground="{StaticResource MutedTextBrush}" Margin="4,12" />
+            <TextBlock Text="{Binding LastReportPath}" TextWrapping="Wrap" Foreground="{DynamicResource MutedTextBrush}" Margin="4,12" />
         </StackPanel>
     </Border>
 </UserControl>
